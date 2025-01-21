@@ -1,5 +1,6 @@
 import threading
 from Event import Event, Level
+import  tkinter as tk
 
 class Log:
     _instance = None
@@ -22,13 +23,13 @@ class Log:
         match e.get_level():
             case Level.INFO:
                 self.text_box.config(foreground='black')
-                self.text_box.insert(e.to_string())
+                self.text_box.insert(tk.END, e.to_string())
             case Level.WARNING:
                 self.text_box.config(foreground='orange')
-                self.text_box.insert(e.to_string())
+                self.text_box.insert(tk.END, e.to_string())
             case Level.ERROR:
                 self.text_box.config(foreground='red')
-                self.text_box.insert(e.to_string())
+                self.text_box.insert(tk.END, e.to_string())
             case Level.GAMEPLAY:
                 self.text_box.config(foreground='blue')
-                self.text_box.insert(e.to_string())
+                self.text_box.insert(tk.END, e.to_string())

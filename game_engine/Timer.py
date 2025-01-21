@@ -3,11 +3,12 @@ import time
 from Event import Event, Level
 
 class Timer:
-    def __init__(self, duration, title, log):
+    def __init__(self, duration, title, log, timer_label = None):
         self.duration = duration
         self.remaining_time = duration
         self.title = title
         self.log = log
+        self.timer_label = timer_label
         self.stop_event = threading.Event()
         self.timer_thread = threading.Thread(target=self.run_timer)
 

@@ -37,10 +37,3 @@ class DistanceNode:
                 else:
                     self.distance_answer.config(text=str(distance) + "la distance cherchée est inférieure") if answer > distance else self.distance_hint_label.config(text=str(distance) + "la distance cherchée est supérieure")
                     self.distance_hint_label.config(text=f"la distance cherchée se trouve entre {distance - randint(3, 7)} et {distance + randint(3, 7)}")
-
-
-
-# genere une distance random
-# le joueur cri, ça active un message détecté par le capteur d'intensité
-# il envoi la distance actuelle
-# je compare

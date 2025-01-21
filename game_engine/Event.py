@@ -21,5 +21,5 @@ class Event:
 
     def to_string(self):
         date_str = self.date.strftime("%Y-%m-%d %H:%M:%S")
-        msg = f"{self.get_string_level(self.level)} : {date_str} -> {self.what}"
+        msg = f"{self.get_string_level(self.level)} : {date_str} -> {self.what}\n"
         return msg

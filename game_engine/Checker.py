@@ -62,14 +62,13 @@ class Checker:
         while True:
             for arbitration_id in ids:
                 is_connected = False
-                msg = self.can_interface.Message(arbitration_id=arbitration_id, is_extended_id=False, is_remote_frame=True)
                 try:
-                    self.can_interface.send(msg)
+                    self.can_interface.send(arbitration_id, False, True)
                     self.log.add(Event(what=f'Test de la connection sur le noeud {self.get_name(arbitration_id)}', level=Level.INFO))
                     ret = self.can_interface.read_can_data()
                     if ret['arbitration_id'] == arbitration_id:
                         is_connected = True
                     self.update(arbitration_id, is_connected)
-                except self.can_interface.CanError:
+                except :
                     self.log.add(Event(what="Le message n'a pas pu être envoyé sur le bus CAN", level=Level.ERROR))
             time.sleep(1)

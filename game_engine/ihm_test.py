@@ -10,13 +10,17 @@ from VoiceNode import VoiceNode
 from Log import Log
 from Timer import Timer
 
+def shutdown():
+    canInterface.disconnect()
+    root.destroy()
 
 def start():
     global colorNode
     global distanceNode
     global voiceNode
 
-    global_timer = Timer(300, "Timer général", log)
+    # TODO : affichage du timer
+    global_timer = Timer(300, "Timer général", log, timer_label)
 
     color_node_event = threading.Event()
     color_node_thread = threading.Thread(target=lambda: colorNode.play())
@@ -35,7 +39,7 @@ root = tk.Tk()
 root.geometry("1366x900")
 
 start_button = ttk.Button(root, text="Start", command=start)
-quit_button = ttk.Button(root, text="Quit", command=root.destroy)
+quit_button = ttk.Button(root, text="Quit", command=shutdown)
 timer_label = ttk.Label(root, text="Timer : 5:00:00")
 
 color_label = ttk.Label(root, text="Color")

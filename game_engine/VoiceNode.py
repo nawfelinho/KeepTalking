@@ -36,16 +36,70 @@ class VoiceNode:
             "Poisson"
         ]
 
-        self.voice_hint = []
-
+        self.voice_hints = [
+            [
+                "Ma direction est liée à l'étoile polaire.",
+                "Je suis opposé au Sud.",
+                "On me suit avec une boussole pour aller en haut."
+            ],
+            [
+                "Les explorateurs m'ont souvent cherché en Antarctique.",
+                "Ma direction est opposée au Nord.",
+                "Là où vivent les manchots empereurs."
+            ],
+            [
+                "Je suis où le soleil se lève.",
+                "Opposé à l’Ouest, je commence la journée.",
+                "On m’associe à l’orient."
+            ],
+            [
+                "On me vit mais on ne me contrôle pas toujours.",
+                "On me trouve dans le sommeil profond.",
+                "Je suis souvent peuplé d’images étranges et irréelles."
+            ],
+            [
+                "Je suis ce qui reste quand la lumière disparaît.",
+                "Les étoiles brillent dans mon domaine.",
+                "Synonyme de ténèbres."
+            ],
+            [
+                "On ne peut ni l’arrêter ni le ralentir.",
+                "Je rends vieux tout ce qui existe.",
+                "Les horloges et calendriers me mesurent."
+            ],
+            [
+                "J’ai une coquille, mais je ne suis pas un coquillage.",
+                "Je cache un jaune trésor.",
+                "On me casse pour faire une omelette."
+            ],
+            [
+                "Je ne suis jamais accessible dans le présent.",
+                "Je suis ce que tout le monde espère ou redoute.",
+                "Demain, je serai toujours là."
+            ],
+            [
+                "Je donne vie mais je suis invisible.",
+                "Je fais bouger les flammes d’une bougie.",
+                "On me retient pour plonger sous l’eau."
+            ],
+            [
+                "Je vis sous l’eau mais je ne respire pas comme toi.",
+                "Mon corps est souvent recouvert d’écailles.",
+                "Les océans et les rivières sont mon habitat."
+            ]
+        ]
+        self.question_index = 0
+        self.hint_id = 0
         self.timer = Timer(60, "Timer module Voix", self.log)
 
     def enable_hint(self):
+        self.hint_id += 1
+        self.voice_hint_label.config(text=self.voice_hints[self.question_index][self.hint_id-1])
         self.voice_hint_label.grid()
 
     def play(self):
-        question_index = random.randint(0, len(self.voice_questions) - 1)
-        self.voice_question.config(text=self.voice_questions[question_index])
+        self.question_index = random.randint(0, len(self.voice_questions) - 1)
+        self.voice_question.config(text=self.voice_questions[self.question_index])
         self.voice_answer.config(text="")
 
         answer = False
@@ -57,7 +111,7 @@ class VoiceNode:
             msg = self.can_interface.read_can_data()
             if msg and msg['arbitration_id'] == '0x020':
                 answer_index = int(msg['data'], 16) - 1
-                if answer_index == question_index:
+                if answer_index == self.question_index:
                     self.voice_answer.config(text=self.voice_answers[answer_index], fg="green")
                     answer = True
                 else:
