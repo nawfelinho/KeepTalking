@@ -1,14 +1,16 @@
 import random
 from Timer import Timer
+from Node import Node
 
-class VoiceNode:
-    def __init__(self, can_interface, voice_question, voice_answer, voice_hint_label, voice_hint_button, log):
+class VoiceNode(Node):
+    def __init__(self, can_interface, voice_question, voice_answer, voice_hint_label, voice_hint_button, log, next_node_event):
         self.can_interface = can_interface
         self.voice_question = voice_question
         self.voice_answer = voice_answer
         self.voice_hint_label = voice_hint_label
         self.voice_hint_button = voice_hint_button
         self.log = log
+        self.next_node_event = next_node_event
 
         self.voice_questions = [
             "Je suis là où le temps est souvent glacial, et où les ours blancs trouvent leur royaume. Mon nom est gravé sur toutes les cartes, mais je ne bouge jamais. Qui suis-je ?",
@@ -90,7 +92,7 @@ class VoiceNode:
         ]
         self.question_index = 0
         self.hint_id = 0
-        self.timer = Timer(60, "Timer module Voix", self.log)
+        self.timer = Timer(5, "Timer module Voix", self.log)
 
     def enable_hint(self):
         self.hint_id += 1
@@ -98,21 +100,29 @@ class VoiceNode:
         self.voice_hint_label.grid()
 
     def play(self):
+        self.timer.start()
         self.question_index = random.randint(0, len(self.voice_questions) - 1)
+        #self.question_index = 8
         self.voice_question.config(text=self.voice_questions[self.question_index])
         self.voice_answer.config(text="")
 
         answer = False
         while not answer:
             if self.timer.get_time() == 0:
+                print("Timer module Voix")
                 self.voice_hint_button.config(command=self.enable_hint)
                 self.voice_hint_button.grid()
 
             msg = self.can_interface.read_can_data()
-            if msg and msg['arbitration_id'] == '0x020':
-                answer_index = int(msg['data'], 16) - 1
-                if answer_index == self.question_index:
-                    self.voice_answer.config(text=self.voice_answers[answer_index], fg="green")
+            if msg and msg['arbitration_id'] == 0x020:
+                print(self.question_index)
+                answer_index = int(msg['data'].split('0')[1]) -1
+                print("data : ", msg['data'].split('0')[1] )
+                print("answer index : ", answer_index)
+                print(type(answer_index))
+                if int(answer_index) == self.question_index:
+                    print("answer index : ", answer_index)
+                    self.voice_answer.config(text="Bonne réponse : " + self.voice_answers[self.question_index])
                     answer = True
                 else:
-                    self.voice_answer.config(text=self.voice_answers[answer_index], fg="red")
+                    self.voice_answer.config(text="mauvaise réponse : " + self.voice_answers[answer_index])

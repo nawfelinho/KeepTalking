@@ -1,7 +1,8 @@
 from Timer import Timer
 from random import randint
+from Node import Node
 
-class DistanceNode:
+class DistanceNode(Node):
     def __init__(self, can_interface, distance_question, distance_answer, distance_hint_label, distance_hint_button, log, next_node_event):
         self.can_interface = can_interface
         self.distance_question = distance_question
@@ -34,6 +35,7 @@ class DistanceNode:
                 if answer == distance:
                     self.distance_answer.config(text=str(distance), fg="green")
                     answer = True
+                    self.next_node_event.set()
                 else:
                     self.distance_answer.config(text=str(distance) + "la distance cherchée est inférieure") if answer > distance else self.distance_hint_label.config(text=str(distance) + "la distance cherchée est supérieure")
                     self.distance_hint_label.config(text=f"la distance cherchée se trouve entre {distance - randint(3, 7)} et {distance + randint(3, 7)}")
