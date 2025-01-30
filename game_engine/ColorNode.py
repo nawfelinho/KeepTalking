@@ -1,7 +1,8 @@
 from random import randint
 from Timer import Timer
+from Node import Node
 
-class ColorNode:
+class ColorNode(Node):
     def __init__(self, can_interface, color_question, color_answer, color_hint_label, color_hint_button, log, next_node_event):
         self.can_interface = can_interface
         self.color_question = color_question
@@ -114,18 +115,18 @@ class ColorNode:
         self.timer.start()
 
         answer = False
-        msg_m = ''
+        color_m = ''
         while not answer:
             if self.timer.get_time() == 0:
                 self.color_hint_button.config(command=self.enable_hint)
                 self.color_hint_button.grid()
 
             msg = self.can_interface.read_can_data()
-            if msg['arbitration_id'] == '0x030' and msg_m == msg['arbitration_id']:
+            if msg['arbitration_id'] == '0x030' and int(msg['data']) == color_id and color_m == color_id:
                 self.color_answer.config(text=self.colors[color_id], fg=self.color_codes[color_id])
                 answer = True
                 self.next_node_event.set()
             else:
-                if msg['arbitration_id'] == '0x030':
-                    msg_m = msg['arbitration_id']
-                self.color_answer.config(text=self.colors[int(msg['arbitration_id'], 16) - 1], fg=self.color_codes[int(msg['arbitration_id'], 16) - 1])
+                if msg['arbitration_id'] == '0x030' and int(msg['data']) == color_id:
+                    color_m = color_id
+                self.color_answer.config(text=self.colors[int(msg['data'], 16) - 1], fg=self.color_codes[int(msg['data'], 16) - 1])
