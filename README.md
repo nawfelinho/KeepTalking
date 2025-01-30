@@ -1,2 +1,2 @@
 # KeepTalking
-Projet Reseau Can - Keeptalking
+Moteur de jeu "Keep Talking" pour le projet CAN
